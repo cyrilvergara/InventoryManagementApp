@@ -2,10 +2,24 @@ const express = require("express");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectId;
 const cors = require("cors");
-
+const path = require("path");
 const app = express();
+const assetsRouter = require("./server/assets-router");
+app.use("/src", assetsRouter);
+
 app.use(cors());
 app.use(express.json());
+
+app.use("/", express.static(path.join(__dirname, "public")));
+app.get("/api/v1", (req, res) => {
+ res.json({
+  project: "React and Express Boilerplate",
+  from: "Vanaldito",
+ });
+});
+app.get("/*", (_req, res) => {
+ res.sendFile(path.join(__dirname, "public", "index.html"));
+})
 
 var CONNECTION_STRING =
   "mongodb+srv://vergaraxy:SvkTloNOx4OmzJUy@verconsinventorymanagem.yzezpta.mongodb.net/inventoryapp?retryWrites=true&w=majority&appName=VerconsInventoryManagementApp";
